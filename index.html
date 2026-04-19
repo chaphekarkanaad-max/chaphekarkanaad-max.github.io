@@ -13,22 +13,48 @@
     --accent: #7f77dd; --accent2: #1d9e75; --accent3: #d85a30;
     --card-r: 14px;
   }
-  body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; font-size: 15px; line-height: 1.7; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text); font-family: 'Inter', system-ui, sans-serif; font-size: 15px; line-height: 1.7; overflow-x: hidden; }
   a { color: inherit; text-decoration: none; }
+
+  /* Nav */
   nav {
-    position: sticky; top: 0; z-index: 100;
-    background: rgba(13,13,15,0.85); backdrop-filter: blur(12px);
-    border-bottom: 0.5px solid var(--border);
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(13,13,15,0); backdrop-filter: blur(0px);
+    border-bottom: 0.5px solid transparent;
     display: flex; align-items: center; justify-content: space-between;
     padding: 0 2rem; height: 56px;
+    transition: background 0.4s, backdrop-filter 0.4s, border-color 0.4s;
+  }
+  nav.scrolled {
+    background: rgba(13,13,15,0.88);
+    backdrop-filter: blur(14px);
+    border-bottom-color: var(--border);
   }
   nav .logo { font-weight: 600; font-size: 15px; }
   nav .logo span { color: var(--accent); }
   nav ul { display: flex; gap: 1.5rem; list-style: none; }
   nav ul li a { font-size: 13px; color: var(--muted); transition: color 0.2s; }
   nav ul li a:hover { color: var(--text); }
-  section { padding: 5rem 2rem; max-width: 900px; margin: 0 auto; }
-  .hero { min-height: 90vh; display: flex; flex-direction: column; justify-content: center; padding-top: 6rem; }
+  nav ul li a.active { color: var(--text); }
+
+  /* Sections */
+  section { padding: 6rem 2rem; max-width: 900px; margin: 0 auto; }
+  .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; padding-top: 4rem; }
+
+  /* Fade-in on scroll */
+  .fade-up {
+    opacity: 0;
+    transform: translateY(28px);
+    transition: opacity 0.7s cubic-bezier(0.22,1,0.36,1), transform 0.7s cubic-bezier(0.22,1,0.36,1);
+  }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+  .fade-up.delay-1 { transition-delay: 0.08s; }
+  .fade-up.delay-2 { transition-delay: 0.16s; }
+  .fade-up.delay-3 { transition-delay: 0.24s; }
+  .fade-up.delay-4 { transition-delay: 0.32s; }
+
+  /* Hero elements */
   .badge { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--accent); background: rgba(127,119,221,0.12); border: 0.5px solid rgba(127,119,221,0.3); border-radius: 100px; padding: 4px 12px; margin-bottom: 1.5rem; }
   .badge::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse 2s infinite; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
@@ -42,13 +68,21 @@
   .btn.primary:hover { background: #6e66cc; }
   .tag-row { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 3rem; }
   .tag { font-size: 12px; color: var(--muted); background: var(--bg3); border: 0.5px solid var(--border); border-radius: 6px; padding: 4px 10px; }
+
+  /* Section titles */
   h2.section-title { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); margin-bottom: 2.5rem; display: flex; align-items: center; gap: 12px; }
   h2.section-title::after { content: ''; flex: 1; height: 0.5px; background: var(--border); }
-  .about-card { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--card-r); padding: 2rem; }
+
+  /* About */
+  .about-card { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--card-r); padding: 2rem; transition: border-color 0.3s; }
+  .about-card:hover { border-color: var(--border2); }
   .about-card p { font-size: 15px; color: var(--muted); line-height: 1.85; margin-bottom: 1.5rem; }
   .about-card p:last-of-type { margin-bottom: 1rem; }
   .interests-row { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 0.5rem; }
-  .interest { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--text); background: var(--bg3); border: 0.5px solid var(--border); border-radius: 6px; padding: 4px 10px; }
+  .interest { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--text); background: var(--bg3); border: 0.5px solid var(--border); border-radius: 6px; padding: 4px 10px; transition: border-color 0.2s; }
+  .interest:hover { border-color: var(--border2); }
+
+  /* Experience */
   .exp-grid { display: flex; flex-direction: column; }
   .exp-item { display: grid; grid-template-columns: 160px 1fr; gap: 2rem; padding: 1.5rem 0; border-bottom: 0.5px solid var(--border); }
   .exp-item:last-child { border-bottom: none; }
@@ -58,9 +92,11 @@
   .exp-bullets { font-size: 13px; color: var(--muted); display: flex; flex-direction: column; gap: 4px; }
   .exp-bullets li { list-style: none; padding-left: 14px; position: relative; }
   .exp-bullets li::before { content: '–'; position: absolute; left: 0; color: var(--border2); }
+
+  /* Projects */
   .proj-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
-  .proj-card { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--card-r); padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 10px; transition: border-color 0.2s, transform 0.2s; }
-  .proj-card:hover { border-color: rgba(127,119,221,0.4); transform: translateY(-2px); }
+  .proj-card { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--card-r); padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 10px; transition: border-color 0.25s, transform 0.25s; }
+  .proj-card:hover { border-color: rgba(127,119,221,0.45); transform: translateY(-3px); }
   .proj-icon { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 18px; margin-bottom: 4px; }
   .proj-title { font-weight: 500; font-size: 14px; }
   .proj-desc { font-size: 13px; color: var(--muted); line-height: 1.6; flex: 1; }
@@ -68,24 +104,37 @@
   .proj-tag { font-size: 11px; padding: 3px 8px; border-radius: 4px; border: 0.5px solid var(--border); color: var(--muted); }
   .award { font-size: 12px; color: var(--accent3); display: inline-flex; align-items: center; gap: 5px; }
   .award::before { content: '★'; }
+
+  /* Skills */
   .skills-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
-  .skill-block { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--card-r); padding: 1.25rem; }
+  .skill-block { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--card-r); padding: 1.25rem; transition: border-color 0.25s, transform 0.25s; }
+  .skill-block:hover { border-color: var(--border2); transform: translateY(-2px); }
   .skill-cat { font-size: 11px; font-weight: 500; color: var(--accent); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 10px; }
   .skill-list { display: flex; flex-wrap: wrap; gap: 6px; }
   .skill-pill { font-size: 12px; background: var(--bg3); border: 0.5px solid var(--border); border-radius: 5px; padding: 4px 9px; color: var(--text); }
+
+  /* Education */
   .edu-grid { display: flex; flex-direction: column; gap: 16px; }
-  .edu-card { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--card-r); padding: 1.25rem 1.5rem; display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: start; }
+  .edu-card { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--card-r); padding: 1.25rem 1.5rem; display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: start; transition: border-color 0.25s; }
+  .edu-card:hover { border-color: var(--border2); }
   .edu-deg { font-weight: 500; font-size: 14px; margin-bottom: 3px; }
   .edu-inst { font-size: 13px; color: var(--accent2); margin-bottom: 6px; }
   .edu-notes { font-size: 12px; color: var(--muted); display: flex; flex-direction: column; gap: 3px; }
   .edu-date { font-size: 12px; color: var(--muted); text-align: right; white-space: nowrap; }
+
+  /* Contact */
   .contact-box { background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--card-r); padding: 2.5rem; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 1rem; }
   .contact-box h3 { font-size: 1.4rem; font-weight: 500; }
   .contact-box p { color: var(--muted); font-size: 14px; max-width: 420px; }
   .contact-links { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 0.5rem; }
   .contact-link { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--muted); background: var(--bg3); border: 0.5px solid var(--border); border-radius: 8px; padding: 8px 16px; transition: all 0.2s; }
-  .contact-link:hover { color: var(--text); border-color: var(--border2); }
+  .contact-link:hover { color: var(--text); border-color: var(--border2); transform: translateY(-1px); }
+
+  /* Progress bar */
+  #progress-bar { position: fixed; top: 0; left: 0; height: 2px; background: var(--accent); width: 0%; z-index: 200; transition: width 0.1s linear; }
+
   footer { text-align: center; padding: 2rem; font-size: 12px; color: var(--muted); border-top: 0.5px solid var(--border); }
+
   @media (max-width: 600px) {
     .exp-item { grid-template-columns: 1fr; gap: 0.5rem; }
     .edu-card { grid-template-columns: 1fr; }
@@ -94,7 +143,9 @@
 </head>
 <body>
 
-<nav>
+<div id="progress-bar"></div>
+
+<nav id="navbar">
   <div class="logo">Kanaad<span>.</span></div>
   <ul>
     <li><a href="#about">About</a></li>
@@ -106,16 +157,16 @@
 </nav>
 
 <section class="hero" id="hero">
-  <div class="badge">Every failure is just data.</div>
-  <h1>Kanaad<br/>Chaphekar,<br/><em>MEEN Engineer.</em></h1>
-  <p class="hero-sub">
+  <div class="badge fade-up">Every failure is just data.</div>
+  <h1 class="fade-up delay-1">Kanaad<br/>Chaphekar,<br/><em>MEEN Engineer.</em></h1>
+  <p class="hero-sub fade-up delay-2">
     Mechanical engineer blending machine learning, data-driven modeling, and systems thinking to solve complex engineering problems.
   </p>
-  <div class="cta-row">
+  <div class="cta-row fade-up delay-3">
     <a href="mailto:kanaad.chaphekar@tamu.edu" class="btn primary">Get in touch</a>
     <a href="#projects" class="btn">View projects</a>
   </div>
-  <div class="tag-row">
+  <div class="tag-row fade-up delay-4">
     <span class="tag">Diffusion Models</span>
     <span class="tag">Machine Learning</span>
     <span class="tag">FEA / ANSYS</span>
@@ -126,11 +177,11 @@
 </section>
 
 <section id="about">
-  <h2 class="section-title">About</h2>
-  <div class="about-card">
+  <h2 class="section-title fade-up">About</h2>
+  <div class="about-card fade-up delay-1">
     <p>I grew up in Pune and moved around Maharashtra before eventually landing in College Station, TX for my master's. My culture is a big part of who I am — it shapes how I think, how I work, and how I connect with people.</p>
     <p>On the engineering side, I'm someone who picks up new tools fast and genuinely enjoys the messy, collaborative work of solving real problems. My time working on AI-driven modeling, factory optimization, and EV systems has given me a solid problem-solving toolkit — and a lot of curiosity about what's next.</p>
-    <p>Outside of work, you'll usually find me watching F1, playing tennis, following cricket, or planning the next hike or road trip.</p>
+    <p>Outside of work, you'll usually find me watching F1, playing tennis, following cricket, or planning the next hike or camping trip.</p>
     <div class="interests-row">
       <span class="interest">🎾 Tennis</span>
       <span class="interest">🏔️ Hiking</span>
@@ -143,9 +194,9 @@
 </section>
 
 <section id="experience">
-  <h2 class="section-title">Experience</h2>
+  <h2 class="section-title fade-up">Experience</h2>
   <div class="exp-grid">
-    <div class="exp-item">
+    <div class="exp-item fade-up delay-1">
       <div class="exp-date">Jan 2026 – Present</div>
       <div>
         <div class="exp-role">Graduate Researcher</div>
@@ -157,7 +208,7 @@
         </ul>
       </div>
     </div>
-    <div class="exp-item">
+    <div class="exp-item fade-up delay-2">
       <div class="exp-date">Jan – Jul 2024</div>
       <div>
         <div class="exp-role">STEP Intern</div>
@@ -169,7 +220,7 @@
         </ul>
       </div>
     </div>
-    <div class="exp-item">
+    <div class="exp-item fade-up delay-3">
       <div class="exp-date">Jun – Jul 2023</div>
       <div>
         <div class="exp-role">Summer Intern</div>
@@ -184,9 +235,9 @@
 </section>
 
 <section id="projects">
-  <h2 class="section-title">Projects</h2>
+  <h2 class="section-title fade-up">Projects</h2>
   <div class="proj-grid">
-    <div class="proj-card">
+    <div class="proj-card fade-up delay-1">
       <div class="proj-icon" style="background: rgba(127,119,221,0.12);">🦽</div>
       <div class="proj-title">Wheelchair Postural Assessment System</div>
       <p class="proj-desc">Engineered a pressure-sensing mat using FSR sensors, Random Forest classification, and Gaussian interpolation for real-time ergonomic heatmaps — cutting production costs by 65% vs. commercial alternatives.</p>
@@ -197,7 +248,7 @@
       </div>
       <span class="award">Best Oral Presentation, KOSES 2025</span>
     </div>
-    <div class="proj-card">
+    <div class="proj-card fade-up delay-2">
       <div class="proj-icon" style="background: rgba(29,158,117,0.12);">🤖</div>
       <div class="proj-title">Robotic Painting Optimization</div>
       <p class="proj-desc">Integrated a CNN-based defect detection module on an IRB1410 robotic arm. Applied Taguchi Method optimization to refine painting precision and minimize process variability based on surface conditions.</p>
@@ -212,9 +263,9 @@
 </section>
 
 <section id="skills">
-  <h2 class="section-title">Skills</h2>
+  <h2 class="section-title fade-up">Skills</h2>
   <div class="skills-grid">
-    <div class="skill-block">
+    <div class="skill-block fade-up delay-1">
       <div class="skill-cat">Software & Data</div>
       <div class="skill-list">
         <span class="skill-pill">Python</span>
@@ -226,7 +277,7 @@
         <span class="skill-pill">MS Excel</span>
       </div>
     </div>
-    <div class="skill-block">
+    <div class="skill-block fade-up delay-2">
       <div class="skill-cat">Engineering</div>
       <div class="skill-list">
         <span class="skill-pill">SolidWorks (CSWA)</span>
@@ -238,7 +289,7 @@
         <span class="skill-pill">ISO Standards</span>
       </div>
     </div>
-    <div class="skill-block">
+    <div class="skill-block fade-up delay-3">
       <div class="skill-cat">Business</div>
       <div class="skill-list">
         <span class="skill-pill">IRR / ROI Modeling</span>
@@ -250,10 +301,10 @@
   </div>
 </section>
 
-<section>
-  <h2 class="section-title">Education</h2>
+<section id="education">
+  <h2 class="section-title fade-up">Education</h2>
   <div class="edu-grid">
-    <div class="edu-card">
+    <div class="edu-card fade-up delay-1">
       <div>
         <div class="edu-deg">M.S. in Mechanical Engineering</div>
         <div class="edu-inst">Texas A&M University, College Station, TX</div>
@@ -264,7 +315,7 @@
       </div>
       <div class="edu-date">Aug 2025 – May 2027</div>
     </div>
-    <div class="edu-card">
+    <div class="edu-card fade-up delay-2">
       <div>
         <div class="edu-deg">B.Tech in Mechanical Engineering</div>
         <div class="edu-inst">SRM Institute of Science & Technology, Chennai</div>
@@ -280,14 +331,13 @@
 </section>
 
 <section id="contact">
-  <h2 class="section-title">Contact</h2>
-  <div class="contact-box">
+  <h2 class="section-title fade-up">Contact</h2>
+  <div class="contact-box fade-up delay-1">
     <h3>Let's connect</h3>
-    <p>Open to research collaborations, internships, and conversations about ML-driven engineering or EV systems.</p>
+    <p>Open to research collaborations, internships, and conversations.</p>
     <div class="contact-links">
       <a href="mailto:kanaad.chaphekar@tamu.edu" class="contact-link">📧 kanaad.chaphekar@tamu.edu</a>
-      <a href="mailto:chaphekarkanaad@tamu.edu" class="contact-link">📧 kanaad.chaphekar@tamu.edu</a>
-      <a href="tel:+19793441926" class="contact-link">📞 +1 (979)-344-1926</a>
+      <a href="tel:+19793441926" class="contact-link">📞 +1 (979) 344-1926</a>
       <a href="https://www.linkedin.com/in/kanaad-chaphekar/" target="_blank" class="contact-link">🔗 LinkedIn</a>
     </div>
   </div>
@@ -297,5 +347,47 @@
   Built with care · Kanaad Chaphekar · College Station, TX
 </footer>
 
+<script>
+  // Scroll progress bar
+  const bar = document.getElementById('progress-bar');
+  const navbar = document.getElementById('navbar');
+  const navLinks = document.querySelectorAll('nav ul li a');
+  const sections = document.querySelectorAll('section[id]');
+
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (scrollTop / docHeight * 100) + '%';
+
+    // Nav background on scroll
+    navbar.classList.toggle('scrolled', scrollTop > 20);
+
+    // Active nav link
+    let current = '';
+    sections.forEach(sec => {
+      if (scrollTop >= sec.offsetTop - 100) current = sec.getAttribute('id');
+    });
+    navLinks.forEach(link => {
+      link.classList.toggle('active', link.getAttribute('href') === '#' + current);
+    });
+  });
+
+  // Intersection Observer for fade-up
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Trigger hero elements immediately
+  document.querySelectorAll('.hero .fade-up').forEach(el => {
+    setTimeout(() => el.classList.add('visible'), 100);
+  });
+</script>
 </body>
 </html>
