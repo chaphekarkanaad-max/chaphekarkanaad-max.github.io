@@ -226,7 +226,8 @@
       flex-direction: column;
       align-items: center;
       gap: 0.75rem;
-      padding-top: 0.5rem;
+      padding-top: 0;
+      margin-top: -2.5rem;
     }
 
     .hero-photo {
@@ -390,6 +391,7 @@
 
     /* ── PROJECTS ── */
     .projects-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .projects-grid .project-card:first-child { grid-column: 1 / -1; }
     .project-card { padding: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
     .project-icon {
       width: 2.25rem; height: 2.25rem;
@@ -696,6 +698,35 @@
             <span class="project-tag">FSR Sensors</span>
           </div>
           <div class="project-award">★ Best Oral Presentation, KOSES 2025</div>
+        </div>
+
+        <div class="card project-card">
+          <div class="project-icon icon-purple">🔬</div>
+          <div class="project-title">Latent Diffusion Modeling for Geometry-Aware Uncertainty Quantification</div>
+          <div class="project-desc">Developing a generative framework that learns geometry-aware representations of manufacturing variability by conditioning fabricated geometries on nominal designs. Combines Heat Kernel Signature features with a conditional latent diffusion model to capture realistic free-form geometric deviations — replacing expensive experimental sampling with scalable, data-driven uncertainty quantification.</div>
+          <div class="project-tags">
+            <span class="project-tag">Diffusion Models</span>
+            <span class="project-tag">Heat Kernel Signatures</span>
+            <span class="project-tag">Uncertainty Quantification</span>
+            <span class="project-tag">Generative AI</span>
+            <span class="project-tag">Transfer Learning</span>
+          </div>
+          <div class="project-award">📍 Texas A&M DIGIT Lab · Ongoing</div>
+        </div>
+
+        <div class="card project-card">
+          <div class="project-icon icon-purple">🏎️</div>
+          <div class="project-title">Ventilated Brake Rotor — Multidisciplinary Design Optimization</div>
+          <div class="project-desc">Developed a full MDO framework for a vented brake rotor coupling thermal, structural, and fluid physics. Used Latin Hypercube DOE (2,000 candidates), a multi-objective genetic algorithm to generate a 150-point Pareto front, and SQP refinement — achieving an optimal cooling time constant of 209 s at 7.35 kg while satisfying 9 hard constraints across physics, manufacturing, and mass budget.</div>
+          <div class="project-tags">
+            <span class="project-tag">MDO</span>
+            <span class="project-tag">MOGA</span>
+            <span class="project-tag">SQP</span>
+            <span class="project-tag">FEA</span>
+            <span class="project-tag">Latin Hypercube DOE</span>
+            <span class="project-tag">MATLAB</span>
+          </div>
+          <div class="project-award">📍 MEEN 683 · Texas A&M · Spring 2026</div>
         </div>
 
         <div class="card project-card">
