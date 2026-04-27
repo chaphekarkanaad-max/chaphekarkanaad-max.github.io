@@ -125,6 +125,7 @@
       padding-bottom: 6rem;
     }
 
+    /* ── ROTATING BADGE ── */
     .hero-badge {
       display: inline-flex;
       align-items: center;
@@ -141,17 +142,42 @@
       width: 6px; height: 6px;
       background: var(--accent);
       border-radius: 50%;
+      flex-shrink: 0;
       animation: pulse 2s ease-in-out infinite;
     }
     @keyframes pulse {
       0%,100% { opacity: 1; }
       50%      { opacity: 0.4; }
     }
-    .hero-badge p {
+
+    /* Rotator: stacks quotes but only one is visible at a time */
+    .quote-rotator {
+      position: relative;
+      display: grid; /* all children overlap same cell */
+      grid-template-areas: 'q';
+    }
+    .quote-item {
+      grid-area: q;
       font-family: 'DM Mono', monospace;
       font-size: 0.72rem;
       color: var(--accent);
       letter-spacing: 0.04em;
+      white-space: nowrap;
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+      pointer-events: none;
+      user-select: none;
+    }
+    /* The active quote is fully visible AND takes up natural width */
+    .quote-item.active {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+    .quote-item.exit {
+      opacity: 0;
+      transform: translateY(-6px);
     }
 
     h1 {
@@ -168,13 +194,22 @@
       color: var(--accent);
     }
 
+    /* ── HERO LAYOUT WITH PHOTO ── */
+    .hero-body {
+      display: flex;
+      align-items: flex-start;
+      gap: 3rem;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+
+    .hero-text { flex: 1; }
+
     .hero-sub {
       max-width: 520px;
       color: var(--muted);
       font-size: 1rem;
       line-height: 1.8;
       margin-bottom: 2.5rem;
-      animation: fadeUp 0.8s 0.2s ease both;
     }
 
     .hero-cta {
@@ -182,7 +217,66 @@
       flex-wrap: wrap;
       gap: 0.75rem;
       margin-bottom: 3rem;
-      animation: fadeUp 0.8s 0.3s ease both;
+    }
+
+    /* ── PHOTO ── */
+    .hero-photo-wrap {
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      padding-top: 0.5rem;
+    }
+
+    .hero-photo {
+      width: 200px;
+      height: 200px;
+      border-radius: 20px;
+      object-fit: cover;
+      border: 1px solid var(--stroke2);
+      background: var(--surface2);
+      display: block;
+      position: relative;
+      /* Subtle glow */
+      box-shadow: 0 0 0 1px var(--accent-bd), 0 20px 40px rgba(0,0,0,0.4);
+    }
+
+    /* Placeholder shown when no real photo src is set */
+    .photo-placeholder {
+      width: 200px;
+      height: 200px;
+      border-radius: 20px;
+      border: 1px dashed var(--accent-bd);
+      background: var(--surface2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      box-shadow: 0 0 0 1px var(--accent-bd), 0 20px 40px rgba(0,0,0,0.4);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .photo-placeholder:hover { border-color: var(--accent); background: #1d1d22; }
+    .photo-placeholder-icon { font-size: 2rem; opacity: 0.5; }
+    .photo-placeholder-text {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.5;
+      padding: 0 0.75rem;
+    }
+
+    .photo-hint {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--muted);
+      letter-spacing: 0.05em;
+      opacity: 0.6;
+      text-align: center;
     }
 
     .btn {
@@ -270,7 +364,6 @@
       content: '–';
       position: absolute;
       left: 0;
-      color: var(--stroke2);
       color: rgba(255,255,255,0.15);
     }
 
@@ -420,6 +513,9 @@
       .skills-grid { grid-template-columns: 1fr; }
       .edu-card { grid-template-columns: 1fr; }
       .edu-date { text-align: left; }
+      .hero-body { flex-direction: column-reverse; align-items: flex-start; gap: 2rem; }
+      .hero-photo-wrap { width: 100%; align-items: flex-start; }
+      .photo-placeholder, .hero-photo { width: 160px; height: 160px; }
     }
   </style>
 </head>
@@ -442,19 +538,41 @@
 
     <!-- HERO -->
     <section id="hero">
+
+      <!-- ROTATING QUOTE BADGE -->
       <div class="hero-badge">
         <div class="hero-badge-dot"></div>
-        <p>Every failure is just data.</p>
+        <div class="quote-rotator" id="quoteRotator">
+          <span class="quote-item active">Every failure is just data.</span>
+          <span class="quote-item">Problems don't stop. Neither do I.</span>
+          <span class="quote-item">Still figuring it out — that's kind of the point.</span>
+          <span class="quote-item">I'm not insane, my mother had me tested.</span>
+          <span class="quote-item">You miss 100% of the shots you don't take.</span>
+        </div>
       </div>
+
       <h1>Kanaad<br>Chaphekar,<br><em>MEEN Engineer.</em></h1>
-      <p class="hero-sub">
-        Mechanical engineer blending machine learning, data-driven modeling,
-        and systems thinking to solve complex engineering problems.
-      </p>
-      <div class="hero-cta">
-        <a href="#contact" class="btn btn-primary">Get in touch</a>
-        <a href="#projects" class="btn btn-ghost">View projects</a>
+
+      <!-- HERO BODY: text + photo side by side -->
+      <div class="hero-body">
+        <div class="hero-text">
+          <p class="hero-sub">
+            Mechanical engineer blending machine learning, data-driven modeling,
+            and systems thinking to solve complex engineering problems.
+          </p>
+          <div class="hero-cta">
+            <a href="#contact" class="btn btn-primary">Get in touch</a>
+            <a href="#projects" class="btn btn-ghost">View projects</a>
+          </div>
+        </div>
+
+        <!-- PHOTO — replace src with your actual photo URL or file path -->
+        <div class="hero-photo-wrap">
+          <img src="avatar.jpg" alt="Kanaad Chaphekar" class="hero-photo" />
+          <div class="photo-hint">kanaad.chaphekar</div>
+        </div>
       </div>
+
       <div class="skill-tags">
         <span class="tag">Diffusion Models</span>
         <span class="tag">Machine Learning</span>
@@ -463,6 +581,7 @@
         <span class="tag">EV Systems</span>
         <span class="tag">SolidWorks CSWA</span>
       </div>
+
     </section>
 
     <!-- ABOUT -->
@@ -657,12 +776,37 @@
   <footer>Built with care · Kanaad Chaphekar · College Station, TX</footer>
 
   <script>
-    // Scroll reveal
+    // ── SCROLL REVEAL ──
     const observer = new IntersectionObserver(
       (entries) => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
       { threshold: 0.08 }
     );
     document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+    // ── ROTATING QUOTES ──
+    (function () {
+      const items = document.querySelectorAll('.quote-item');
+      let current = 0;
+
+      function rotate() {
+        const prev = current;
+        current = (current + 1) % items.length;
+
+        // Exit old
+        items[prev].classList.remove('active');
+        items[prev].classList.add('exit');
+
+        // After exit transition, clean up
+        setTimeout(() => {
+          items[prev].classList.remove('exit');
+        }, 600);
+
+        // Enter new
+        items[current].classList.add('active');
+      }
+
+      setInterval(rotate, 7000);
+    })();
   </script>
 
 </body>
